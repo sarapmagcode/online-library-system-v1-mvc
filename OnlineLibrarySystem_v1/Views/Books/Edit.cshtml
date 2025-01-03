@@ -1,0 +1,82 @@
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.BookViewModel
+
+@{
+	ViewData["Title"] = "Edit Book";
+}
+
+<h5>Edit Book</h5>
+
+<form class="col-5" asp-controller="books" asp-action="edit">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<!-- Id -->
+	<input type="hidden" asp-for="Book.Id" />
+
+	<!-- Title -->
+	<div class="mb-3">
+		<label asp-for="Book.Title" class="form-label"></label>
+		<input 
+			asp-for="Book.Title"
+			class="form-control"
+			type="text"
+			placeholder="Enter title"
+		/>
+		<span asp-validation-for="Book.Title" class="text-danger"></span>
+	</div>
+
+	<!-- Description -->
+	<div class="mb-3">
+		<label asp-for="Book.Description" class="form-label"></label>
+		<textarea 
+			asp-for="Book.Description"
+			class="form-control"
+			placeholder="Enter description here..."
+		>
+		</textarea>
+		<span asp-validation-for="Book.Description" class="text-danger"></span>
+	</div>
+
+	<!-- Author -->
+	<div class="mb-3">
+		<label asp-for="Book.Author" class="form-label"></label>
+		<input 
+			asp-for="Book.Author"
+			class="form-control"
+			type="text"
+			placeholder="Enter author"
+		/>
+		<span asp-validation-for="Book.Author" class="text-danger"></span>
+	</div>
+
+	<!-- Category -->
+	<div class="mb-3">
+		<label asp-for="Book.CategoryId" class="form-label"></label>
+		<select class="form-select" asp-for="Book.CategoryId" asp-items="Model.CategoryList">
+			<option value="" disabled selected>Choose a category</option>
+		</select>
+		<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
+	</div>
+
+	<!-- Total Copies -->
+	<div class="mb-3">
+		<label asp-for="Book.TotalCopies" class="form-label"></label>
+		<input 
+			asp-for="Book.TotalCopies"
+			class="form-control"
+			type="number"
+			readonly="true"
+			placeholder="Enter total no. of copies"
+		/>
+		<!-- TODO: Place a warning here that you cannot edit total copies if currently borrowed -->
+	</div>
+
+	<button class="btn btn-primary" type="submit">Save</button>
+	<a asp-controller="books" asp-action="details" asp-route-id="@Model.Book.Id" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

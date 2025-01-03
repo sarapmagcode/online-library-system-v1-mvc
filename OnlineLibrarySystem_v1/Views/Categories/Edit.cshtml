@@ -1,0 +1,34 @@
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.CategoryViewModel
+
+@{
+	ViewData["Title"] = "Edit Category";
+}
+
+<h5>Edit Category</h5>
+
+<form class="col-4" asp-controller="categories" asp-action="edit">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<input asp-for="Id" type="hidden" />
+
+	<div class="mb-3">
+		<label asp-for="Name" class="form-label">Name</label>
+		<input
+			asp-for="Name"
+			class="form-control"
+			type="text"
+			placeholder="Enter category name"
+		/>
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+
+	<button class="btn btn-primary" type="submit">Save</button>
+	<a asp-controller="categories" asp-action="index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

@@ -1,0 +1,33 @@
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.CategoryViewModel
+
+@{
+	ViewData["Title"] = "Create Category";
+}
+
+<h5>Create Category</h5>
+
+<!-- Forms by default use post method (in ASP.NET Core MVC) -->
+<form class="col-4" asp-controller="categories" asp-action="create">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<div class="mb-3">
+		<label asp-for="Name" class="form-label">Name</label>
+		<input
+			asp-for="Name"
+			class="form-control"
+			type="text"
+			placeholder="Enter category name"
+		/>
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+
+	<button class="btn btn-primary" type="submit">Submit</button>
+	<a asp-controller="categories" asp-action="index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
