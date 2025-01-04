@@ -34,7 +34,7 @@ namespace OnlineLibrarySystem_v1.Controllers
         // GET: Categories/Create
         public IActionResult Create()
         {
-            if (ViewData["Role"] == null || ViewData["Role"] != "admin")
+            if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
                 return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
             }
@@ -67,7 +67,7 @@ namespace OnlineLibrarySystem_v1.Controllers
         // GET: Categories/Edit/5
         public async Task<IActionResult >Edit(int? id)
         {
-            if (ViewData["Role"] == null || ViewData["Role"] != "admin")
+            if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
                 return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
             }
@@ -136,7 +136,7 @@ namespace OnlineLibrarySystem_v1.Controllers
         // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (ViewData["Role"] == null || ViewData["Role"] != "admin")
+            if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
                 return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
             }

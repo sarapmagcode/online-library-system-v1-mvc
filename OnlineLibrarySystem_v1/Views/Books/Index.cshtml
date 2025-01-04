@@ -22,7 +22,14 @@
 		{
 			<div class="col">
 				<a class="card h-100 text-decoration-none text-dark" asp-controller="books" asp-action="details" asp-route-id="@book.Id">
-					<img src="https://placehold.co/600x400" class="card-img-top" alt="book image">
+					@if (string.IsNullOrEmpty(book.ImagePath))
+					{
+						<img src="https://placehold.co/600x400" class="card-img-top" alt="book image">
+					}
+					else
+					{
+						<img src="@book.ImagePath" class="card-img-top" alt="book image">
+					}
 					<div class="card-body">
 						<h5 class="card-title">@book.Title</h5>
 						<p class="card-text">

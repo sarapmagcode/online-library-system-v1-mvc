@@ -6,8 +6,22 @@
 
 <h5>Create Book</h5>
 
-<form class="col-5" asp-controller="books" asp-action="create">
+<form class="col-5" asp-controller="Books" asp-action="Create" enctype="multipart/form-data">
 	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<!-- Book Image -->
+	<div class="mb-3">
+		<label asp-for="Book.ImagePath" class="form-label"></label>
+		<input
+			asp-for="Book.ImagePath"
+			class="form-control"
+			name="bookImage"
+			type="file"
+			accept=".jpg,.jpeg,.png"
+		/>
+		<div class="form-text">Allowed formats: JPG, JPEG, PNG. Maximum size: 5MB</div>
+		<span asp-validation-for="Book.ImagePath" class="text-danger"></span>
+	</div>
 
 	<!-- Title -->
 	<div class="mb-3">

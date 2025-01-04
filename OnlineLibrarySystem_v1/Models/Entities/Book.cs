@@ -8,6 +8,10 @@ namespace OnlineLibrarySystem_v1.Models.Entities
     {
         public int Id { get; set; }
 
+        [BindNever]
+        [Display(Name = "Book Image")]
+        public string? ImagePath { get; set; }
+
         [Required]
         public string Title { get; set; }
 

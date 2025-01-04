@@ -11,6 +11,9 @@ namespace OnlineLibrarySystem_v1.Controllers
     {
         private readonly LibraryDbContext _context;
 
+        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+        private const int maxFileSize = 5 * 1024 * 1024; // 5MB
+
         public BooksController(LibraryDbContext context)
         {
             _context = context;
@@ -72,20 +75,89 @@ namespace OnlineLibrarySystem_v1.Controllers
         // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookViewModel bookViewModel)
+        public async Task<IActionResult> Create(BookViewModel bookViewModel, IFormFile? bookImage)
         {
-            if (ModelState.IsValid)
+            // Initial validation
+            if (bookImage == null || bookImage.Length == 0)
             {
-                bookViewModel.Book.CopiesAvailable = bookViewModel.Book.TotalCopies;
-
-                _context.Add(bookViewModel.Book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("Book.ImagePath", "Please provide an image of the book");
+                var categories = await _context.Categories.ToListAsync();
+                bookViewModel.CategoryList = new SelectList(categories, "Id", "Name", bookViewModel.Book.CategoryId);
+                return View(bookViewModel);
             }
 
-            var categories = await _context.Categories.ToListAsync();
-            // 4th parameter below - selected value
-            bookViewModel.CategoryList = new SelectList(categories, "Id", "Name", bookViewModel.Book?.CategoryId);
+            // File type validation
+            var extension = Path.GetExtension(bookImage.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                ModelState.AddModelError("Book.ImagePath", "Only .jpg, .jpeg, and .png files are allowed");
+                var categories = await _context.Categories.ToListAsync();
+                bookViewModel.CategoryList = new SelectList(categories, "Id", "Name", bookViewModel.Book.CategoryId);
+                return View(bookViewModel);
+            }
+
+            // File size validation
+            if (bookImage.Length > maxFileSize)
+            {
+                ModelState.AddModelError("Book.ImagePath", "File size cannot exceed 5MB");
+                var categories = await _context.Categories.ToListAsync();
+                bookViewModel.CategoryList = new SelectList(categories, "Id", "Name", bookViewModel.Book.CategoryId);
+                return View(bookViewModel);
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Handle file upload
+                    var uploadFolder = Path.Combine("wwwroot", "uploads");
+                    if (!Directory.Exists(uploadFolder))
+                    {
+                        Directory.CreateDirectory(uploadFolder);
+                    }
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + bookImage.FileName;
+                    var filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await bookImage.CopyToAsync(fileStream);
+                    }
+
+                    /*
+                     * Note:
+                     * 1. The physical file is saved in the "wwwroot/uploads" folder on your server
+                     * 2. But when accessing the file through a web browser, "wwwroot" is treated as the 
+                     * web root directory and is not included in the URL path
+                     * 
+                     * So:
+                     * - Physical path on server: wwwroot/uploads/guid_image.jpg
+                     * - URL path in database/browser: /uploads/guid_image.jpg
+                     * 
+                     * This works because:
+                     * - ASP.NET Core treats "wwwroot" as the root directory for static files
+                     * - When a browser requests /uploads/image.jpg, the server automatically looks in wwwroot/uploads/image.jpg
+                     * - You never include "wwwroot" in URLs or links because it's just the container for public files
+                     */
+                    bookViewModel.Book.ImagePath = "/uploads/" + uniqueFileName;
+
+                    bookViewModel.Book.CopiesAvailable = bookViewModel.Book.TotalCopies;
+
+                    _context.Add(bookViewModel.Book);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "An error occurred while saving the book. Please try again.");
+                }
+            }
+
+            var categoriesList = await _context.Categories.ToListAsync();
+
+            // 4th parameter below: Selected value
+            bookViewModel.CategoryList = new SelectList(categoriesList, "Id", "Name", bookViewModel.Book?.CategoryId);
             return View(bookViewModel);
         }
 
