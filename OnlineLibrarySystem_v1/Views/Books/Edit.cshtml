@@ -6,67 +6,76 @@
 
 <h5>Edit Book</h5>
 
-<form class="col-5" asp-controller="books" asp-action="edit">
+<form class="col-5" asp-controller="Books" asp-action="Edit" enctype="multipart/form-data">
+
 	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 	<!-- Id -->
-	<input type="hidden" asp-for="Book.Id" />
+	<input type="hidden" asp-for="Id" />
 
 	<!-- Book Image -->
 	<div class="mb-3">
-
+		<label asp-for="BookImage" class="form-label"></label>
+		<input 
+			asp-for="BookImage"
+			class="form-control"
+			type="file"
+			accept=".jpg,.jpeg,.png"
+		/>
+		<div class="form-text">Allowed formats: JPG, JPEG, PNG. Maximum size: 5MB</div>
+		<span asp-validation-for="BookImage" class="text-danger"></span>
 	</div>
 
 	<!-- Title -->
 	<div class="mb-3">
-		<label asp-for="Book.Title" class="form-label"></label>
+		<label asp-for="Title" class="form-label"></label>
 		<input 
-			asp-for="Book.Title"
+			asp-for="Title"
 			class="form-control"
 			type="text"
 			placeholder="Enter title"
 		/>
-		<span asp-validation-for="Book.Title" class="text-danger"></span>
+		<span asp-validation-for="Title" class="text-danger"></span>
 	</div>
 
 	<!-- Description -->
 	<div class="mb-3">
-		<label asp-for="Book.Description" class="form-label"></label>
+		<label asp-for="Description" class="form-label"></label>
 		<textarea 
-			asp-for="Book.Description"
+			asp-for="Description"
 			class="form-control"
 			placeholder="Enter description here..."
 		>
 		</textarea>
-		<span asp-validation-for="Book.Description" class="text-danger"></span>
+		<span asp-validation-for="Description" class="text-danger"></span>
 	</div>
 
 	<!-- Author -->
 	<div class="mb-3">
-		<label asp-for="Book.Author" class="form-label"></label>
+		<label asp-for="Author" class="form-label"></label>
 		<input 
-			asp-for="Book.Author"
+			asp-for="Author"
 			class="form-control"
 			type="text"
 			placeholder="Enter author"
 		/>
-		<span asp-validation-for="Book.Author" class="text-danger"></span>
+		<span asp-validation-for="Author" class="text-danger"></span>
 	</div>
 
 	<!-- Category -->
 	<div class="mb-3">
-		<label asp-for="Book.CategoryId" class="form-label"></label>
-		<select class="form-select" asp-for="Book.CategoryId" asp-items="Model.CategoryList">
+		<label asp-for="CategoryId" class="form-label"></label>
+		<select class="form-select" asp-for="CategoryId" asp-items="Model.CategoryList">
 			<option value="" disabled selected>Choose a category</option>
 		</select>
-		<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
+		<span asp-validation-for="CategoryId" class="text-danger"></span>
 	</div>
 
 	<!-- Total Copies -->
 	<div class="mb-3">
-		<label asp-for="Book.TotalCopies" class="form-label"></label>
+		<label asp-for="TotalCopies" class="form-label"></label>
 		<input 
-			asp-for="Book.TotalCopies"
+			asp-for="TotalCopies"
 			class="form-control"
 			type="number"
 			readonly="true"
@@ -76,7 +85,7 @@
 	</div>
 
 	<button class="btn btn-primary" type="submit">Save</button>
-	<a asp-controller="books" asp-action="details" asp-route-id="@Model.Book.Id" class="btn btn-outline-secondary">Cancel</a>
+	<a asp-controller="books" asp-action="details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
 </form>
 
 @section Scripts

@@ -1,20 +1,27 @@
-﻿@model OnlineLibrarySystem_v1.Models.ViewModels.BookViewModel
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.BookListViewModel
 
 @{
 	ViewData["Title"] = "Book Details";
 }
-
 
 <div class="container py-4">
     <div class="row">
         <!-- Book Cover/Image Column -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
-                <img src="https://placehold.co/600x400" alt="Book cover" class="card-img-top" />
+                @if (string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="https://placehold.co/600x400" alt="Book cover" class="card-img-top" />
+                }
+                else
+                {
+                    <img src="@Model.ImagePath" alt="Book cover" class="card-img-top" />
+                }
+
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <p class="text-secondary">@Model.Book.Category.Name</p>
-                        <small class="text-muted">Stock: @Model.Book.CopiesAvailable/@Model.Book.TotalCopies</small>
+                        <p class="text-secondary">@Model.CategoryName</p>
+                        <small class="text-muted">Stock: @Model.CopiesAvailable/@Model.TotalCopies</small>
                     </div>
                 </div>
             </div>
@@ -29,7 +36,7 @@
                         <a
                             asp-controller="books"
                             asp-action="delete"
-                            asp-route-id="@Model.Book.Id"
+                            asp-route-id="@Model.Id"
                             class="btn btn-outline-danger me-md-2 float-end"
                         >
                             <i class="bi bi-trash"></i> Delete
@@ -37,7 +44,7 @@
                         <a 
                             asp-controller="books"
                             asp-action="edit" 
-                            asp-route-id="@Model.Book.Id"
+                            asp-route-id="@Model.Id"
                             class="btn btn-outline-secondary me-md-2 float-end"
                         >
                             <i class="bi bi-pencil-square"></i> Edit
@@ -46,12 +53,12 @@
                 }
 
                 <div class="card-body">
-                    <h2 class="card-title mb-3">@Model.Book.Title</h2>
-                    <h6 class="card-subtitle mb-3 text-muted">by <strong>@Model.Book.Author</strong></h6>
+                    <h2 class="card-title mb-3">@Model.Title</h2>
+                    <h6 class="card-subtitle mb-3 text-muted">by <strong>@Model.Author</strong></h6>
 
                     <div class="mb-4">
                         <h5 class="text-secondary mb-2">Description</h5>
-                        <p class="card-text">@Model.Book.Description</p>
+                        <p class="card-text">@Model.Description</p>
                     </div>
 
                     <!-- Action Buttons -->
