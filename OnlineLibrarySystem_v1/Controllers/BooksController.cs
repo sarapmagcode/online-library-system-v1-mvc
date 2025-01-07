@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineLibrarySystem_v1.Data;
-using OnlineLibrarySystem_v1.Models.Entities;
 using OnlineLibrarySystem_v1.Models.ViewModels;
 
 namespace OnlineLibrarySystem_v1.Controllers
@@ -342,7 +341,7 @@ namespace OnlineLibrarySystem_v1.Controllers
                 Directory.CreateDirectory(uploadFolder);
             }
 
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+            var uniqueFileName = Guid.NewGuid().ToString() + "_bookImage";
             var filePath = Path.Combine(uploadFolder, uniqueFileName);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
