@@ -9,14 +9,7 @@
         <!-- Book Cover/Image Column -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
-                @if (string.IsNullOrEmpty(Model.ImagePath))
-                {
-                    <img src="https://placehold.co/600x400" alt="Book cover" class="card-img-top" />
-                }
-                else
-                {
-                    <img src="@Model.ImagePath" alt="Book cover" class="card-img-top" />
-                }
+                <img src="@Model.ImagePath" alt="Book cover" class="card-img-top" />
 
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -58,7 +51,9 @@
 
                     <div class="mb-4">
                         <h5 class="text-secondary mb-2">Description</h5>
-                        <p class="card-text">@Model.Description</p>
+
+                        <!-- Preserve all whitespace but keep normal font -->
+                        <p class="card-text" style="white-space: pre-wrap;">@Model.Description</p>
                     </div>
 
                     <!-- Action Buttons -->
