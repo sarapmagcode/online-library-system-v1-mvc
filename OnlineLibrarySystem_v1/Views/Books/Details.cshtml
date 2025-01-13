@@ -56,10 +56,37 @@
                         <p class="card-text" style="white-space: pre-wrap;">@Model.Description</p>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                        <button class="btn btn-primary me-md-2" type="button">Borrow Book</button>
-                    </div>
+                    <!-- Book Actions (user only) -->
+                    @if (ViewData["Role"] == null || ViewData["Role"].Equals("user"))
+                    {
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            @if (Model.IsCurrentlyBorrowed == true)
+                            {
+                                <div class="d-flex align-items-center gap-3">
+                                    <form 
+                                        asp-controller="Books"
+                                        asp-action="ReturnBook" 
+                                        asp-route-id="@Model.Id"
+                                    >
+                                        <button class="btn btn-success" type="submit">
+                                            <i class="bi bi-arrow-return-left me-1"></i>Return Book
+                                        </button>
+                                    </form>
+
+                                    <p class="text-muted mb-0">
+                                        Must return on or before <strong>@Model.DueDate?.ToString("MMM dd, yyyy")</strong>
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+							    <form asp-controller="Books" asp-action="Details">
+								    <input asp-for="Id" type="hidden" />
+                                    <button class="btn btn-primary me-md-2" type="submit">Borrow Book</button>
+                                </form>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
         </div>

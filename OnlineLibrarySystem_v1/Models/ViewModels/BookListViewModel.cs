@@ -28,6 +28,12 @@ namespace OnlineLibrarySystem_v1.Models.ViewModels
         [Display(Name = "Total Copies")]
         public int TotalCopies { get; set; }
 
+        // Extras
         public string TruncatedDescription => StringExtensions.TruncateWithEllipsis(Description, 64);
+        public bool? IsCurrentlyBorrowed { get; set; }
+
+        [Display(Name = "Due Date")]
+        [DisplayFormat(DataFormatString = "{0:MMM dd, yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? DueDate { get; set; }
     }
 }

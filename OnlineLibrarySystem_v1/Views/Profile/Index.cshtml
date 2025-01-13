@@ -1,0 +1,57 @@
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.ProfileViewModel
+
+@{
+	ViewData["Title"] = "Profile";
+}
+
+<div class="container py-3">
+	<div class="row mb-5">
+		<!-- User Info Section -->
+		<div class="col-md-4">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">User Information</h5>
+
+					<div class="mb-3">
+						<label class="text-muted">Username</label>
+						<p class="lead mb-2">@Model.User.Username</p>
+					</div>
+
+					<div class="mb-3">
+						<label class="text-muted">Email</label>
+						<p class="lead mb-2">@Model.User.Email</p>
+					</div>
+
+					<button class="btn btn-primary">
+						Edit Profile
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Statistics Card -->
+		<div class="col-md-8">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Library Statistics</h5>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="text-center mb-3">
+								<h6 class="text-muted">Currently Borrowed</h6>
+								<h2></h2>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+
+						</div>
+
+						<div class="col-md-4">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

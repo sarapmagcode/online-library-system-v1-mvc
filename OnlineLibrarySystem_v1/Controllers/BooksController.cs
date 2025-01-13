@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineLibrarySystem_v1.Data;
+using OnlineLibrarySystem_v1.Models.Entities;
 using OnlineLibrarySystem_v1.Models.ViewModels;
 
 namespace OnlineLibrarySystem_v1.Controllers
@@ -60,6 +61,13 @@ namespace OnlineLibrarySystem_v1.Controllers
                 return NotFound();
             }
 
+            var userId = ViewData["UserId"] != null ? Convert.ToInt32(ViewData["UserId"]) : -1;
+
+            var currentBorrowing = userId != -1 ?
+                await _context.BorrowedBooks
+                    .Where(bb => bb.BookId == id && bb.UserId == userId && bb.ReturnDate == null)
+                    .FirstOrDefaultAsync() : null;
+
             var viewModel = new BookListViewModel
             {
                 Id = book.Id,
@@ -69,10 +77,122 @@ namespace OnlineLibrarySystem_v1.Controllers
                 Author = book.Author,
                 CategoryName = book.Category.Name,
                 CopiesAvailable = book.CopiesAvailable,
-                TotalCopies = book.TotalCopies
+                TotalCopies = book.TotalCopies,
+                IsCurrentlyBorrowed = currentBorrowing != null,
+                DueDate = currentBorrowing?.DueDate
             };
 
             return View(viewModel);
+        }
+
+        // POST: Books/Details/5
+        [HttpPost, ActionName("Details")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DetailsAction(int? id)
+        {
+            if (ViewData["UserId"] == null || ViewData["Username"] == null)
+            {
+                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Books
+                .Include(b => b.Category)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            if (book.CopiesAvailable <= 0)
+            {
+                TempData["ErrorMessage"] = "Sorry, this book is currently not available for borrowing.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var userId = ViewData["UserId"] != null ? Convert.ToInt32(ViewData["UserId"]) : -1;
+            if (userId == -1)
+            {
+                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+            }
+
+            var existingBorrow = await _context.BorrowedBooks
+                .AnyAsync(bb => bb.BookId == id && bb.UserId == userId && bb.ReturnDate == null);
+            if (existingBorrow)
+            {
+                TempData["ErrorMessage"] = "You already have this book borrowed.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var borrowedBook = new BorrowedBook
+            {
+                BookId = book.Id,
+                UserId = userId,
+                BorrowDate = DateTime.UtcNow,
+                DueDate = DateTime.UtcNow.AddDays(14) // 2-week borrowing period
+            };
+
+            book.CopiesAvailable--;
+
+            _context.BorrowedBooks.Add(borrowedBook);
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccesMessage"] = "Book borrowed successfully! Please return it by " + borrowedBook.DueDate.ToString("MMMM dd, yyyy");
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReturnBook(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            if (ViewData["UserId"] == null)
+            {
+                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+            }
+
+            int userId = Convert.ToInt32(ViewData["UserId"]);
+
+            var borrowedBook = await _context.BorrowedBooks
+                .FirstOrDefaultAsync(bb => bb.BookId == id && bb.UserId == userId && bb.ReturnDate == null);
+
+            if (borrowedBook == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var book = await _context.Books.FindAsync(id);
+                if (book != null)
+                {
+                    book.CopiesAvailable++;
+                }
+
+                borrowedBook.ReturnDate = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DBConcurrencyException)
+            {
+                if(!BorrowedBookExists(borrowedBook.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         // GET: Books/Create
@@ -291,6 +411,11 @@ namespace OnlineLibrarySystem_v1.Controllers
         private bool BookExists(int id)
         {
             return (_context.Books?.Any(book => book.Id == id)).GetValueOrDefault();
+        }
+
+        private bool BorrowedBookExists(int bookId)
+        {
+            return (_context.BorrowedBooks?.Any(borrowedBook => borrowedBook.BookId == bookId)).GetValueOrDefault();
         }
 
         private async Task RefreshCategoryList(BookViewModel viewModel)
