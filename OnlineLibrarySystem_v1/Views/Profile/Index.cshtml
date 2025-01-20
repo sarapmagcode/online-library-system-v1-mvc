@@ -22,7 +22,7 @@
 						<p class="lead mb-2">@Model.User.Email</p>
 					</div>
 
-					<button class="btn btn-primary">
+					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-profile-modal">
 						Edit Profile
 					</button>
 				</div>
@@ -38,20 +38,253 @@
 						<div class="col-md-4">
 							<div class="text-center mb-3">
 								<h6 class="text-muted">Currently Borrowed</h6>
-								<h2></h2>
+								<h2>@Model.BorrowedBooks.Count(bb => bb.ReturnDate == null)</h2>
 							</div>
 						</div>
 
 						<div class="col-md-4">
-
+							<div class="text-center mb-3">
+								<h6 class="text-muted">Total Books Borrowed</h6>
+								<h2>@Model.BorrowedBooks.Count</h2>
+							</div>
 						</div>
 
 						<div class="col-md-4">
-
+							<div class="text-center mb-3">
+								<h6 class="text-muted">Books Due Soon</h6>
+								<h2>@Model.BorrowedBooks.Count(bb => bb.DueDate <= DateTime.Now.AddDays(3) && bb.ReturnDate == null)</h2>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<!-- Currently Borrowed Books -->
+	<div class="card mb-4">
+		<div class="card-body">
+			<h5 class="card-title">Currently Borrowed Books</h5>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Book</th>
+							<th>Borrowed Date</th>
+							<th>Due Date</th>
+							<th>Status</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						@foreach (var borrowRecord in Model.BorrowedBooks.Where(bb => bb.ReturnDate == null))
+						{
+							<tr>
+								<!-- Book -->
+								<td>
+									<div class="d-flex align-items-center">
+										<img 
+											class="me-3"
+											style="width: 50px; height: 70px; object-fit: cover;"
+											src="@borrowRecord.Book.ImagePath" 
+											alt="Book image"
+										/>
+										<div>
+											<h6 class="mb-0">@borrowRecord.Book.Title</h6>
+											<small class="text-muted">@borrowRecord.Book.Author</small>
+										</div>
+									</div>
+								</td>
+
+								<!-- Borrowed Date -->
+								<td>@borrowRecord.BorrowDate.ToString("MMM dd, yyyy")</td>
+
+								<!-- Due Date -->
+								<td>
+									<span class="@(borrowRecord.DueDate < DateTime.Now ? "text-danger" : "")">
+										@borrowRecord.DueDate.ToString("MMM dd, yyyy")
+									</span>
+								</td>
+
+								<!-- Status-->
+								<td>
+									@if (borrowRecord.DueDate < DateTime.Now)
+									{
+										<span class="badge bg-danger">Overdue</span>
+									}
+									else if (borrowRecord.DueDate <= DateTime.Now.AddDays(3))
+									{
+										<span class="badge bg-warning">Due Soon</span>
+									}
+									else
+									{
+										<span class="badge bg-success">On Time</span>
+									}
+								</td>
+
+								<!-- Actions -->
+								<td>
+									<button class="btn btn-sm btn-outline-primary">Return</button>
+									<button class="btn btn-sm btn-outline-secondary">Extend</button>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- Borrowing History -->
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Borrowing History</h5>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Book</th>
+							<th>Borrowed Date</th>
+							<th>Due Date</th>
+							<th>Returned Date</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						@foreach (var borrowRecord in Model.BorrowedBooks.Where(bb => bb.ReturnDate!= null).OrderByDescending(bb => bb.ReturnDate))
+						{
+							<tr>
+								<!-- Book -->
+								<td>
+									<div class="d-flex align-items-center">
+										<img
+											class="me-3"
+											src="@borrowRecord.Book.ImagePath"
+											style="width: 50px; height: 70px; object-fit: cover;"
+											alt="Book image"
+										/>
+										<div>
+											<h6 class="mb-0">@borrowRecord.Book.Title</h6>
+											<small class="text-muted">@borrowRecord.Book.Author</small>
+										</div>
+									</div>
+								</td>
+
+								<!-- Borrowed Date -->
+								<td>
+									@borrowRecord.BorrowDate.ToString("MMM dd, yyyy")
+								</td>
+
+								<!-- Due Date -->
+								<td>
+									@borrowRecord.DueDate.ToString("MMM dd, yyyy")
+								</td>
+
+								<!-- Returned Date -->
+								<td>
+									@borrowRecord.ReturnDate?.ToString("MMM dd, yyyy")
+								</td>
+
+								<!-- Status -->
+								<td>
+									@if (borrowRecord.ReturnDate > borrowRecord.DueDate)
+									{
+										<span class="badge bg-danger">Returned Late</span>
+									}
+									else
+									{
+										<span class="badge bg-success">Returned On Time</span>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="edit-profile-modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form asp-controller="Profile" asp-action="EditProfile">
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Profile</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal Body -->
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Username</label>
+						<input 
+							class="form-control" 
+							type="text"
+							value="@Model.User.Username" 
+							disabled 
+							readonly
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Email</label>
+						<input 
+							class="form-control"
+							type="email" 
+							value="@Model.User.Email" 
+							disabled 
+							readonly
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="OldPassword" class="form-label"></label>
+						<input asp-for="OldPassword" class="form-control" type="password" />
+						<span asp-validation-for="OldPassword" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="NewPassword" class="form-label"></label>
+						<input asp-for="NewPassword" class="form-control" type="password" />
+						<span asp-validation-for="NewPassword" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ConfirmNewPassword" class="form-label"></label>
+						<input asp-for="ConfirmNewPassword" class="form-control" type="password" />
+						<span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+					</div>
+				
+				</div>
+
+				<!-- Modal Footer -->
+				<div class="modal-footer">
+					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
+					<button class="btn btn-primary" type="submit">Save Changes</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	@if (!ViewData.ModelState.IsValid)
+	{
+		<script>
+			$(document).ready(function() {
+				$('#edit-profile-modal').modal('show');	
+			});
+		</script>
+	}
+}

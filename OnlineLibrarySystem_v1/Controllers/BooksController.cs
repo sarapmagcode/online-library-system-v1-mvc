@@ -92,7 +92,9 @@ namespace OnlineLibrarySystem_v1.Controllers
         {
             if (ViewData["UserId"] == null || ViewData["Username"] == null)
             {
-                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLower(),
+                    nameof(AccountController).Replace("Controller", "").ToLower());
             }
 
             if (id == null)
