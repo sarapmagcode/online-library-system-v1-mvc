@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineLibrarySystem_v1.Data;
@@ -130,6 +131,57 @@ namespace OnlineLibrarySystem_v1.Controllers
         }
 
         // POST: Profile/ReturnBook/5
+        public async Task<IActionResult> ReturnBook(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            if (ViewData["UserId"] == null)
+            {
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLower(),
+                    nameof(AccountController).Replace("Controller", "").ToLower()
+                );
+            }
+
+            int userId = Convert.ToInt32(ViewData["UserId"]);
+
+            var borrowedBook = await _context.BorrowedBooks
+                .Include(bb => bb.Book)
+                .FirstOrDefaultAsync(bb => bb.Id == id && bb.User.Id == userId);
+
+            if (borrowedBook == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                borrowedBook.Book.CopiesAvailable++;
+                borrowedBook.ReturnDate = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BorrowedBookExists(borrowedBook.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #region Helper Methods
+
+        private bool BorrowedBookExists(int id)
+        {
+            return (_context.BorrowedBooks?.Any(bb => bb.Id == id)).GetValueOrDefault();
+        }
+
+        #endregion
     }
 }

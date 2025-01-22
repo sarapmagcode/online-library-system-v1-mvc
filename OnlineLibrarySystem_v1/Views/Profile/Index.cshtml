@@ -129,6 +129,7 @@
 										class="btn btn-sm btn-outline-primary return-book-toggle"
 										data-bs-toggle="modal"
 										data-bs-target="#return-book-modal"
+										data-borrow-id="@borrowRecord.Id"
 									>
 										Return
 									</button>
@@ -137,6 +138,7 @@
 										class="btn btn-sm btn-outline-secondary"
 										data-bs-toggle="modal"
 										data-bs-target="#extend-borrow-modal"
+										data-borrow-id="@borrowRecord.Id"
 									>
 										Extend
 									</button>
@@ -291,7 +293,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form asp-controller="Profile" asp-action="ReturnBook">
-				<input type="hidden" name="bookId" id="return-book-id" />
+				<input id="borrowed-book-id" name="id" type="hidden" />
 
 				<!-- Modal Header -->
 				<div class="modal-header">
@@ -321,15 +323,17 @@
 	<script>
 		$(document).ready(function() {
 			$('.return-book-toggle').click(function() {
+				const borrowedBookId = $(this).data('borrow-id');
+				$('#borrowed-book-id').val(borrowedBookId);
+				
 				const bookRow = $(this).closest('tr');
-
 				const bookImage = bookRow.find('img').attr('src');
 				const bookTitle = bookRow.find('h6').text();
 				const bookAuthor = bookRow.find('small').text();
 				const borrowDate = bookRow.find('td:eq(1)').text();
 				const dueDate = bookRow.find('td:eq(2)').text();
 
-				const modalContent = `
+				const modalBodyContent = `
 					<p>Are you sure you want to return this?</p>
 
 					<div class="d-flex align-items-center mb-3">
@@ -352,7 +356,7 @@
 					</div>
 				`;
 
-				$('#return-book-modal .modal-body').html(modalContent);
+				$('#return-book-modal .modal-body').html(modalBodyContent);
 			});
 		});
 	</script>
