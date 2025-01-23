@@ -25,7 +25,10 @@ namespace OnlineLibrarySystem_v1.Controllers
         {
             if (ViewData["Username"] == null)
             {
-                return RedirectToAction(nameof(AccountController.Login).ToLower(), nameof(AccountController).Replace("Controller", "").ToLower());
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
+                );
             }
 
             var userId = Convert.ToInt32(ViewData["UserId"]);
@@ -58,8 +61,8 @@ namespace OnlineLibrarySystem_v1.Controllers
             if (ViewData["UserId"] == null)
             {
                 return RedirectToAction(
-                    nameof(AccountController.Login).ToLower(),
-                    nameof(AccountController).Replace("Controller", "").ToLower()
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
                 );
             }
 
@@ -142,8 +145,8 @@ namespace OnlineLibrarySystem_v1.Controllers
             if (ViewData["UserId"] == null)
             {
                 return RedirectToAction(
-                    nameof(AccountController.Login).ToLower(),
-                    nameof(AccountController).Replace("Controller", "").ToLower()
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
                 );
             }
 
