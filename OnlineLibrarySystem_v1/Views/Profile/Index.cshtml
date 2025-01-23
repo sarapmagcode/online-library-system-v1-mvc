@@ -135,7 +135,7 @@
 									</button>
 
 									<button 
-										class="btn btn-sm btn-outline-secondary"
+										class="btn btn-sm btn-outline-secondary extend-borrow-toggle"
 										data-bs-toggle="modal"
 										data-bs-target="#extend-borrow-modal"
 										data-borrow-id="@borrowRecord.Id"
@@ -314,6 +314,32 @@
 	</div>
 </div>
 
+<!-- Extend Borrow Modal -->
+<div class="modal fade" id="extend-borrow-modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form asp-controller="Profile" asp-action="ExtendBorrow">
+				<input id="borrow-record-id" name="id" type="hidden" />
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h5 class="modal-title">Extend Borrow</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal Body -->
+				<div class="modal-body"></div>
+
+				<!-- Modal Footer -->
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">Yes</button>
+					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">No</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 @section Scripts
 {
 	@{
@@ -357,6 +383,44 @@
 				`;
 
 				$('#return-book-modal .modal-body').html(modalBodyContent);
+			});
+
+			$('.extend-borrow-toggle').click(function() {
+				const borrowedBookId = $(this).data('borrow-id');
+				$('#borrow-record-id').val(borrowedBookId);
+
+				const bookRow = $(this).closest('tr');
+				const bookImage = bookRow.find('img').attr('src');
+				const bookTitle = bookRow.find('h6').text();
+				const bookAuthor = bookRow.find('small').text();
+				const borrowDate = bookRow.find('td:eq(1)').text();
+				const dueDate = bookRow.find('td:eq(2)').text();
+
+				const modalBodyContent = `
+					<p>Are you sure you want to extend borrowing this?</p>
+
+					<div class="d-flex align-items-center mb-3">
+						<img
+							src=${bookImage}
+							style="width: 50px; height: 70px; object-fit: cover"
+							class="me-3"
+							alt="Book image"
+						/>
+						<div>
+							<h6 class="mb-0">${bookTitle}</h6>
+							<small class="text-muted">${bookAuthor}</small>
+						</div>
+					</div>
+					<div class="mb-2">
+						<strong>Borrowed Date:</strong> ${borrowDate}
+					</div>
+					<div class="mb-2">
+						<strong>Original Due Date:</strong> ${dueDate}
+					</div>
+					<p class="text-secondary">Note: This will be extended for another 2-weeks.</p>
+				`;
+
+				$('#extend-borrow-modal .modal-body').html(modalBodyContent);
 			});
 		});
 	</script>

@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -161,6 +162,48 @@ namespace OnlineLibrarySystem_v1.Controllers
             {
                 borrowedBook.Book.CopiesAvailable++;
                 borrowedBook.ReturnDate = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BorrowedBookExists(borrowedBook.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Profile/ExtendBorrow/5
+        public async Task<IActionResult> ExtendBorrow(int? id)
+        {
+            if (ViewData["UserId"] == null)
+            {
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
+                );
+            }
+
+            int userId = Convert.ToInt32(ViewData["UserId"]);
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var borrowedBook = await _context.BorrowedBooks
+                .FirstOrDefaultAsync(bb => bb.Id == id && bb.UserId == userId);
+            if (borrowedBook == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                borrowedBook.DueDate = DateTime.UtcNow.AddDays(14);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
