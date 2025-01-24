@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineLibrarySystem_v1.Data;
@@ -206,7 +204,7 @@ namespace OnlineLibrarySystem_v1.Controllers
 
             try
             {
-                borrowedBook.DueDate = DateTime.UtcNow.AddDays(14);
+                borrowedBook.DueDate = borrowedBook.DueDate.AddDays(14);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

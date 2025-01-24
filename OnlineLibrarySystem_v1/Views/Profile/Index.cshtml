@@ -348,79 +348,53 @@
 
 	<script>
 		$(document).ready(function() {
-			$('.return-book-toggle').click(function() {
-				const borrowedBookId = $(this).data('borrow-id');
-				$('#borrowed-book-id').val(borrowedBookId);
-				
-				const bookRow = $(this).closest('tr');
-				const bookImage = bookRow.find('img').attr('src');
-				const bookTitle = bookRow.find('h6').text();
-				const bookAuthor = bookRow.find('small').text();
-				const borrowDate = bookRow.find('td:eq(1)').text();
-				const dueDate = bookRow.find('td:eq(2)').text();
+			function populateModal(triggerElement, modalSelector, actionText) {
+				const bookRow = triggerElement.closest('tr');
+				const bookData = {
+					id: triggerElement.data('borrow-id'),
+					image: bookRow.find('img').attr('src'),
+					title: bookRow.find('h6').text(),
+					author: bookRow.find('small').text(),
+					borrowDate: bookRow.find('td:eq(1)').text(),
+					dueDate: bookRow.find('td:eq(2)').text()
+				};
 
 				const modalBodyContent = `
-					<p>Are you sure you want to return this?</p>
+					<p>Are you sure you want to ${actionText}?</p>
 
 					<div class="d-flex align-items-center mb-3">
 						<img
-							src=${bookImage}
+							src="${bookData.image}"
 							style="width: 50px; height: 70px; object-fit: cover"
 							class="me-3"
 							alt="Book image"
 						/>
 						<div>
-							<h6 class="mb-0">${bookTitle}</h6>
-							<small class="text-muted">${bookAuthor}</small>
+							<h6 class="mb-0">${bookData.title}</h6>
+							<small class="text-muted">${bookData.author}</small>
 						</div>
 					</div>
 					<div class="mb-2">
-						<strong>Borrowed Date:</strong> ${borrowDate}
+						<strong>Borrowed Date:</strong> ${bookData.borrowDate}
 					</div>
-					<div>
-						<strong>Due Date:</strong> ${dueDate}
+					<div class="${modalSelector === '#extend-borrow-modal' ? 'mb-2' : ''}">
+						<strong>${modalSelector === '#extend-borrow-modal' ? 'Original Due Date' : 'Due Date'}</strong>&nbsp;${bookData.dueDate}
 					</div>
+					${modalSelector === '#extend-borrow-modal'
+						? '<p class="text-secondary">Note: This will be extended for another 2-weeks.</p>'
+						: ''}
 				`;
 
-				$('#return-book-modal .modal-body').html(modalBodyContent);
+				$(modalSelector + ' .modal-body').html(modalBodyContent);
+				$(modalSelector + ' input[type="hidden"]').val(bookData.id);
+			}
+
+			$('.return-book-toggle').click(function() {
+				populateModal($(this), '#return-book-modal', 'return this');
 			});
 
 			$('.extend-borrow-toggle').click(function() {
-				const borrowedBookId = $(this).data('borrow-id');
-				$('#borrow-record-id').val(borrowedBookId);
-
-				const bookRow = $(this).closest('tr');
-				const bookImage = bookRow.find('img').attr('src');
-				const bookTitle = bookRow.find('h6').text();
-				const bookAuthor = bookRow.find('small').text();
-				const borrowDate = bookRow.find('td:eq(1)').text();
-				const dueDate = bookRow.find('td:eq(2)').text();
-
-				const modalBodyContent = `
-					<p>Are you sure you want to extend borrowing this?</p>
-
-					<div class="d-flex align-items-center mb-3">
-						<img
-							src=${bookImage}
-							style="width: 50px; height: 70px; object-fit: cover"
-							class="me-3"
-							alt="Book image"
-						/>
-						<div>
-							<h6 class="mb-0">${bookTitle}</h6>
-							<small class="text-muted">${bookAuthor}</small>
-						</div>
-					</div>
-					<div class="mb-2">
-						<strong>Borrowed Date:</strong> ${borrowDate}
-					</div>
-					<div class="mb-2">
-						<strong>Original Due Date:</strong> ${dueDate}
-					</div>
-					<p class="text-secondary">Note: This will be extended for another 2-weeks.</p>
-				`;
-
-				$('#extend-borrow-modal .modal-body').html(modalBodyContent);
+				populateModal($(this), '#extend-borrow-modal', 'extend-borrowing-this');
 			});
 		});
 	</script>
