@@ -46,10 +46,18 @@
 
 								    <ul class="dropdown-menu">
 
-                                        <!-- TODO: Dashboard page for Admin -->
-									    <li>
-                                            <a asp-controller="profile" asp-action="index" class="dropdown-item">Profile</a>
-                                        </li>
+                                        @if (ViewData["Role"]!.Equals("user"))
+                                        {
+									        <li>
+                                                <a asp-controller="profile" asp-action="index" class="dropdown-item">Profile</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a asp-controller="profile" asp-action="admin" class="dropdown-item">Dashboard</a>
+                                            </li>
+                                        }
 
 									    <li>
                                             <form asp-controller="account" asp-action="logout">

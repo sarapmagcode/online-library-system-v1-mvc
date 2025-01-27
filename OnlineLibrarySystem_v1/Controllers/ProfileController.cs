@@ -29,6 +29,11 @@ namespace OnlineLibrarySystem_v1.Controllers
                 );
             }
 
+            if (ViewData["Role"]!.Equals("admin"))
+            {
+                return RedirectToAction(nameof(Admin));
+            }
+
             var userId = Convert.ToInt32(ViewData["UserId"]);
 
             var user = await _context.Users.FindAsync(userId);
@@ -49,6 +54,28 @@ namespace OnlineLibrarySystem_v1.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // GET: Profile/Admin
+        public async Task<IActionResult> Admin()
+        {
+            if (ViewData["Username"] == null)
+            {
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
+                );
+            }
+
+            if (ViewData["Role"]!.Equals("user"))
+            {
+                return RedirectToAction(
+                    nameof(Index),
+                    nameof(ProfileController).Replace("Controller", "").ToLowerInvariant()
+                );
+            }
+
+            return View();
         }
 
         // POST: Profile/EditProfile
