@@ -1,10 +1,78 @@
 ﻿@{
-	ViewData["Title"] = "Dashboard";
+	ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container py-4">
-	<!-- Admin Profile Section -->
-	<div class="card mb-4 shadow-sm">
+<div class="container py-3">
 
+	<div class="row mb-5 d-flex align-items-stretch">
+		<!-- Admin Info Section -->
+		<div class="col-md-4 d-flex">
+			<div class="card flex-grow-1">
+				<div class="card-header">
+					Admin Information
+				</div>
+
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="text-muted">Username</label>
+						<p class="lead mb-2">Admin Username</p>
+					</div>
+
+					<div class="mb-3">
+						<label class="text-muted">Email</label>
+						<p class="lead mb-2">Admin Email</p>
+					</div>
+
+					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-profile-modal">
+						Edit Profile
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Statistics Card -->
+		<div class="col-md-8 d-flex">
+			<div class="card flex-grow-1">
+				<div class="card-header">
+					Library Statistics
+				</div>
+
+				<div class="card-body d-flex align-items-center">
+					<div class="w-100">
+						<div class="row justify-content-between">
+							<div class="col text-center mb-3">
+								<h6 class="text-muted">Total Users</h6>
+								<h2>999</h2>
+							</div>
+
+							<div class="col text-center mb-3">
+								<h6 class="text-muted">Total Books</h6>
+								<h2>999</h2>
+							</div>
+
+							<div class="col text-center mb-3">
+								<h6 class="text-muted">Currently Borrowed</h6>
+								<h2>999</h2>
+							</div>
+
+							<div class="col text-center mb-3">
+								<h6 class="text-muted">Categories</h6>
+								<h2>999</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
+
 </div>
+
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+
+}
