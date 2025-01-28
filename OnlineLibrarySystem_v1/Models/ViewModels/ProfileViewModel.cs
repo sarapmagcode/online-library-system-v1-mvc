@@ -15,15 +15,15 @@ namespace OnlineLibrarySystem_v1.Models.ViewModels
         #region Edit profile
 
         [Display(Name = "Old Password")]
-        [Required]
+        [Required(ErrorMessage = "Old password is required")]
         public string OldPassword { get; set; } = string.Empty;
 
         [Display(Name = "New Password")]
-        [Required]
+        [Required(ErrorMessage = "New password is required")]
         public string NewPassword { get; set; } = string.Empty;
 
         [Display(Name = "Confirm New Password")]
-        [Required]
+        [Required(ErrorMessage = "Confirm new password is required")]
         public string ConfirmNewPassword { get; set; } = string.Empty;
 
         #endregion
