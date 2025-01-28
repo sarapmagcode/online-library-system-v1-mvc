@@ -1,4 +1,6 @@
-﻿@{
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.ProfileViewModel
+
+@{
 	ViewData["Title"] = "Admin Dashboard";
 }
 
@@ -66,6 +68,70 @@
 		</div>
 	</div>
 
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="edit-profile-modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form asp-controller="Profile" asp-action="EditAdminInfo">
+				<!-- Modal Header-->
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Admin Info</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal Body -->
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Username</label>
+						<input
+							class="form-control"
+							type="text"
+							value="@Model.User.Username"
+							disabled
+							readonly
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Email</label>
+						<input
+							class="form-control" 
+							type="email" 
+							value="@Model.User.Email" 
+							disabled
+							readonly
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="OldPassword" class="form-label"></label>
+						<input asp-for="OldPassword" class="form-control" type="password" />
+						<span asp-validation-for="OldPassword" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="NewPassword" class="form-label"></label>
+						<input asp-for="NewPassword" class="form-control" type="password" />
+						<span asp-validation-for="NewPassword" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ConfirmNewPassword" class="form-label"></label>
+						<input asp-for="ConfirmNewPassword" class="form-control" type="password" />
+						<span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+					</div>
+				</div>
+
+				<!-- Modal Footer -->
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">Save Changes</button>
+					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 @section Scripts

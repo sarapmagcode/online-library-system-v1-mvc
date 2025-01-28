@@ -18,6 +18,8 @@ namespace OnlineLibrarySystem_v1.Controllers
             _passwordHasher = passwordHasher;
         }
 
+        #region User Account
+
         // GET: Profile/Index
         public async Task<IActionResult> Index()
         {
@@ -54,28 +56,6 @@ namespace OnlineLibrarySystem_v1.Controllers
             };
 
             return View(viewModel);
-        }
-
-        // GET: Profile/Admin
-        public async Task<IActionResult> Admin()
-        {
-            if (ViewData["Username"] == null)
-            {
-                return RedirectToAction(
-                    nameof(AccountController.Login).ToLowerInvariant(),
-                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
-                );
-            }
-
-            if (ViewData["Role"]!.Equals("user"))
-            {
-                return RedirectToAction(
-                    nameof(Index),
-                    nameof(ProfileController).Replace("Controller", "").ToLowerInvariant()
-                );
-            }
-
-            return View();
         }
 
         // POST: Profile/EditProfile
@@ -245,6 +225,55 @@ namespace OnlineLibrarySystem_v1.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
+
+        #region Admin Account
+
+        // GET: Profile/Admin
+        public async Task<IActionResult> Admin()
+        {
+            if (ViewData["Username"] == null)
+            {
+                return RedirectToAction(
+                    nameof(AccountController.Login).ToLowerInvariant(),
+                    nameof(AccountController).Replace("Controller", "").ToLowerInvariant()
+                );
+            }
+
+            if (ViewData["Role"]!.Equals("user"))
+            {
+                return RedirectToAction(
+                    nameof(Index),
+                    nameof(ProfileController).Replace("Controller", "").ToLowerInvariant()
+                );
+            }
+
+            var userId = Convert.ToInt32(ViewData["UserId"]);
+
+            var admin = await _context.Users.FindAsync(userId);
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            ProfileViewModel viewModel = new ProfileViewModel
+            {
+                User = admin
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Profile/EditAdminInfo
+        public async Task<IActionResult> EditAdminInfo(ProfileViewModel viewModel)
+        {
+
+
+            return RedirectToAction(nameof(Admin));
+        }
+
+        #endregion
 
         #region Helper Methods
 
