@@ -17,12 +17,12 @@
 				<div class="card-body">
 					<div class="mb-3">
 						<label class="text-muted">Username</label>
-						<p class="lead mb-2">Admin Username</p>
+						<p class="lead mb-2">@Model.User.Username</p>
 					</div>
 
 					<div class="mb-3">
 						<label class="text-muted">Email</label>
-						<p class="lead mb-2">Admin Email</p>
+						<p class="lead mb-2">@Model.User.Email</p>
 					</div>
 
 					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-profile-modal">
@@ -140,5 +140,12 @@
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 
-
+	@if (!ViewData.ModelState.IsValid)
+	{
+		<script>
+			$(document).ready(function() {
+				$('#edit-profile-modal').modal('show');
+			});
+		</script>
+	}
 }
