@@ -44,22 +44,22 @@
 						<div class="row justify-content-between">
 							<div class="col text-center mb-3">
 								<h6 class="text-muted">Total Users</h6>
-								<h2>999</h2>
+								<h2>@Model.Users.Count</h2>
 							</div>
 
 							<div class="col text-center mb-3">
-								<h6 class="text-muted">Total Books</h6>
-								<h2>999</h2>
+								<h6 class="text-muted">Total Book Copies</h6>
+								<h2>@Model.TotalBookCopiesFormatted</h2>
 							</div>
 
 							<div class="col text-center mb-3">
 								<h6 class="text-muted">Currently Borrowed</h6>
-								<h2>999</h2>
+								<h2>@Model.BorrowedBooks.Count</h2>
 							</div>
 
 							<div class="col text-center mb-3">
 								<h6 class="text-muted">Categories</h6>
-								<h2>999</h2>
+								<h2>@Model.Categories.Count</h2>
 							</div>
 						</div>
 					</div>

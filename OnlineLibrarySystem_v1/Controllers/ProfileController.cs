@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineLibrarySystem_v1.Data;
 using OnlineLibrarySystem_v1.Models.Entities;
 using OnlineLibrarySystem_v1.Models.ViewModels;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace OnlineLibrarySystem_v1.Controllers
 {
@@ -258,9 +259,24 @@ namespace OnlineLibrarySystem_v1.Controllers
                 return NotFound();
             }
 
+            var books = await _context.Books.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
+
+            var users = await _context.Users
+                .Where(user => user.Role.Equals("user"))
+                .ToListAsync();
+
+            var borrowedBooks = await _context.BorrowedBooks
+                .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                .ToListAsync();
+
             ProfileViewModel viewModel = new ProfileViewModel
             {
-                User = admin
+                User = admin,
+                TotalBookCopiesFormatted = $"{books.Sum(book => book.TotalCopies):N0}",
+                Categories = categories,
+                Users = users,
+                BorrowedBooks = borrowedBooks,
             };
 
             return View(viewModel);
@@ -312,8 +328,20 @@ namespace OnlineLibrarySystem_v1.Controllers
 
             if (!ModelState.IsValid)
             {
+                var books = await _context.Books.ToListAsync();
+                var categories = await _context.Categories.ToListAsync();
+                var users = await _context.Users
+                    .Where(user => user.Role.Equals("user"))
+                    .ToListAsync();
+                var borrowedBooks = await _context.BorrowedBooks
+                    .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                    .ToListAsync();
+
                 viewModel.User = admin;
-                // TODO: Retrieve data here
+                viewModel.TotalBookCopiesFormatted = $"{books.Sum(book => book.TotalCopies):N0}";
+                viewModel.Categories = categories;
+                viewModel.Users = users;
+                viewModel.BorrowedBooks = borrowedBooks;
 
                 return View(nameof(Admin), viewModel);
             }
@@ -331,8 +359,20 @@ namespace OnlineLibrarySystem_v1.Controllers
             {
                 ModelState.AddModelError("ConfirmNewPassword", "Unable to save changes. Please try again.");
 
+                var books = await _context.Books.ToListAsync();
+                var categories = await _context.Categories.ToListAsync();
+                var users = await _context.Users
+                    .Where(user => user.Role.Equals("user"))
+                    .ToListAsync();
+                var borrowedBooks = await _context.BorrowedBooks
+                    .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                    .ToListAsync();
+
                 viewModel.User = admin;
-                // TODO: Retrieve data here
+                viewModel.TotalBookCopiesFormatted = $"{books.Sum(book => book.TotalCopies):N0}";
+                viewModel.Categories = categories;
+                viewModel.Users = users;
+                viewModel.BorrowedBooks = borrowedBooks;
 
                 return View(nameof(Admin), viewModel);
             }

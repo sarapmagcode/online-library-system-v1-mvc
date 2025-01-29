@@ -12,6 +12,18 @@ namespace OnlineLibrarySystem_v1.Models.ViewModels
         [BindNever]
         public List<BorrowedBook>? BorrowedBooks { get; set; }
 
+        [BindNever]
+        public List<Book>? Books { get; set; }
+
+        [BindNever]
+        public List<Category>? Categories { get; set; }
+
+        [BindNever]
+        public List<User>? Users { get; set; }
+
+        [BindNever]
+        public string? TotalBookCopiesFormatted { get; set; }
+
         #region Edit profile
 
         [Display(Name = "Old Password")]
