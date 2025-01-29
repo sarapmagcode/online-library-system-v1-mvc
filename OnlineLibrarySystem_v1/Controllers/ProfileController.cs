@@ -231,6 +231,7 @@ namespace OnlineLibrarySystem_v1.Controllers
         #region Admin Account
 
         // GET: Profile/Admin
+        [HttpGet]
         public async Task<IActionResult> Admin()
         {
             if (ViewData["Username"] == null)
