@@ -79,7 +79,7 @@ namespace OnlineLibrarySystem_v1.Controllers
                 return NotFound();
             }
 
-            // Checks if old password is correct
+            // Check if old password is correct
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(
                 user,
                 user.PasswordHash,
@@ -91,13 +91,13 @@ namespace OnlineLibrarySystem_v1.Controllers
                 ModelState.AddModelError("OldPassword", "Incorrect password");
             }
 
-            // Checks if new password length is at least 5 characters
+            // Check if new password length is at least 5 characters
             if (viewModel.NewPassword.Length < 5)
             {
                 ModelState.AddModelError("NewPassword", "Must be at least 5 characters");
             }
 
-            // Checks if passwords match
+            // Check if passwords match
             if (viewModel.NewPassword != viewModel.ConfirmNewPassword)
             {
                 ModelState.AddModelError("ConfirmNewPassword", "Must match with New Password");
