@@ -267,7 +267,9 @@ namespace OnlineLibrarySystem_v1.Controllers
                 .ToListAsync();
 
             var borrowedBooks = await _context.BorrowedBooks
+                .Include(borrowedBook => borrowedBook.Book)
                 .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                .OrderByDescending(borrowedBook => borrowedBook.BorrowDate)
                 .ToListAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel
@@ -330,11 +332,15 @@ namespace OnlineLibrarySystem_v1.Controllers
             {
                 var books = await _context.Books.ToListAsync();
                 var categories = await _context.Categories.ToListAsync();
+
                 var users = await _context.Users
                     .Where(user => user.Role.Equals("user"))
                     .ToListAsync();
+
                 var borrowedBooks = await _context.BorrowedBooks
+                    .Include(borrowedBook => borrowedBook.Book)
                     .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                    .OrderByDescending(borrowedBook => borrowedBook.BorrowDate)
                     .ToListAsync();
 
                 viewModel.User = admin;
@@ -361,11 +367,15 @@ namespace OnlineLibrarySystem_v1.Controllers
 
                 var books = await _context.Books.ToListAsync();
                 var categories = await _context.Categories.ToListAsync();
+
                 var users = await _context.Users
                     .Where(user => user.Role.Equals("user"))
                     .ToListAsync();
+
                 var borrowedBooks = await _context.BorrowedBooks
+                    .Include(borrowedBook => borrowedBook.Book)
                     .Where(borrowedBook => borrowedBook.ReturnDate == null)
+                    .OrderByDescending(borrowedBook => borrowedBook.BorrowDate)
                     .ToListAsync();
 
                 viewModel.User = admin;

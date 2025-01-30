@@ -68,6 +68,42 @@
 		</div>
 	</div>
 
+	<!-- Recently Borrowed Books Section -->
+	<div class="row mb-5">
+		<div class="col md-12">
+			<div class="card">
+				<div class="card-header">
+					Recently Borrowed Books
+				</div>
+
+				<div class="card-body">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Book Title</th>
+								<th>Borrowed By</th>
+								<th>Date Borrowed</th>
+								<th>Due Date</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							@foreach (var borrowedBook in Model.BorrowedBooks.Take(5))
+							{
+								<tr>
+									<td>@borrowedBook.Book.Title</td>
+									<td>@borrowedBook.User.Username</td>
+									<td>@borrowedBook.BorrowDate.ToString("MMM dd, yyyy")</td>
+									<td>@borrowedBook.DueDate.ToString("MMM dd, yyyy")</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 
 <!-- Edit Profile Modal -->
