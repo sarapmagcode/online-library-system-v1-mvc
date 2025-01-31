@@ -93,8 +93,14 @@
 								<tr>
 									<td>@borrowedBook.Book.Title</td>
 									<td>@borrowedBook.User.Username</td>
-									<td>@borrowedBook.BorrowDate.ToString("MMM dd, yyyy")</td>
-									<td>@borrowedBook.DueDate.ToString("MMM dd, yyyy")</td>
+									
+									<!--
+									<td class="borrowDates">@borrowedBook.BorrowDate.ToString("MMM dd, yyyy")</td>
+									<td class="dueDates">@borrowedBook.DueDate.ToString("MMM dd, yyyy")</td>
+									-->
+
+									<td class="borrow-dates" data-utc="@borrowedBook.BorrowDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"></td>
+									<td class="due-dates" data-utc="@borrowedBook.DueDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"></td>
 								</tr>
 							}
 						</tbody>
@@ -175,6 +181,32 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const borrowDates = document.querySelectorAll('.borrow-dates');
+			const dueDates = document.querySelectorAll('.due-dates');
+
+			const convertUtcDate = (storedDate) => {
+				const utcDate = new Date(storedDate);
+				const formattedDate = utcDate.toLocaleString("en-US", {
+					month: 'short',
+					day: '2-digit',
+					year: 'numeric',
+				});
+
+				return formattedDate;
+			};
+
+			borrowDates.forEach((borrowDate) => {
+				borrowDate.innerHTML = convertUtcDate(borrowDate.dataset.utc);
+			});
+
+			dueDates.forEach((dueDate) => {
+				dueDate.innerHTML = convertUtcDate(dueDate.dataset.utc);
+			});
+		});
+	</script>
 
 	@if (!ViewData.ModelState.IsValid)
 	{
