@@ -84,7 +84,7 @@
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody class="borrowed-books-section">
 						@foreach (var borrowRecord in Model.BorrowedBooks.Where(bb => bb.ReturnDate == null))
 						{
 							<tr>
@@ -105,12 +105,20 @@
 								</td>
 
 								<!-- Borrowed Date -->
-								<td>@borrowRecord.BorrowDate.ToString("MMM dd, yyyy")</td>
+								<td>
+									<span
+										class="borrowed-date" 
+										data-utc="@borrowRecord.BorrowDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"
+									>
+									</span>
+								</td>
 
 								<!-- Due Date -->
 								<td>
-									<span class="@(borrowRecord.DueDate < DateTime.Now ? "text-danger" : "")">
-										@borrowRecord.DueDate.ToString("MMM dd, yyyy")
+									<span
+										class="due-date @(borrowRecord.DueDate < DateTime.Now ? "text-danger" : "")"
+										data-utc="@borrowRecord.DueDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"
+									>	
 									</span>
 								</td>
 
@@ -403,6 +411,32 @@
 			$('.extend-borrow-toggle').click(function() {
 				populateModal($(this), '#extend-borrow-modal', 'extend-borrowing-this');
 			});
+		});
+
+		const domElements = {
+			borrowedBooksSection: {
+				borrowedDates: document.querySelectorAll('.borrowed-books-section .borrowed-date'),
+				dueDates: document.querySelectorAll('.borrowed-books-section .due-date')
+			}
+		};
+
+		const convertUtcDate = (storedDate) => {
+			const utcDate = new Date(storedDate);
+			const formattedDate = utcDate.toLocaleString('en-US', {
+				month: 'short',
+				day: '2-digit',
+				year: 'numeric'
+			})
+
+			return formattedDate;
+		};
+
+		domElements.borrowedBooksSection.borrowedDates.forEach((borrowedDate) => {
+			borrowedDate.innerHTML = convertUtcDate(borrowedDate.dataset.utc);
+		});
+
+		domElements.borrowedBooksSection.dueDates.forEach((dueDate) => {
+			dueDate.innerHTML = convertUtcDate(dueDate.dataset.utc);
 		});
 	</script>
 
