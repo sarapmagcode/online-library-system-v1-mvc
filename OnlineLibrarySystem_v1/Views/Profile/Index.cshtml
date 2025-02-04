@@ -182,7 +182,7 @@
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody class="borrowing-history-section">
 						@foreach (var borrowRecord in Model.BorrowedBooks.Where(bb => bb.ReturnDate!= null).OrderByDescending(bb => bb.ReturnDate))
 						{
 							<tr>
@@ -204,17 +204,27 @@
 
 								<!-- Borrowed Date -->
 								<td>
-									@borrowRecord.BorrowDate.ToString("MMM dd, yyyy")
+									<span
+										class="borrowed-date"
+										data-utc="@borrowRecord.BorrowDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"
+									>
+									</span>
 								</td>
 
 								<!-- Due Date -->
 								<td>
-									@borrowRecord.DueDate.ToString("MMM dd, yyyy")
+									<span
+										class="due-date"
+										data-utc="@borrowRecord.DueDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"
+									>
+									</span>
 								</td>
 
 								<!-- Returned Date -->
-								<td>
-									@borrowRecord.ReturnDate?.ToString("MMM dd, yyyy")
+								<td 
+									class="returned-date"
+									data-utc="@borrowRecord.ReturnDate?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"
+								>
 								</td>
 
 								<!-- Status -->
@@ -416,8 +426,13 @@
 		const domElements = {
 			borrowedBooksSection: {
 				borrowedDates: document.querySelectorAll('.borrowed-books-section .borrowed-date'),
-				dueDates: document.querySelectorAll('.borrowed-books-section .due-date')
-			}
+				dueDates: document.querySelectorAll('.borrowed-books-section .due-date'),
+			},
+			borrowingHistorySection: {
+				borrowedDates: document.querySelectorAll('.borrowing-history-section .borrowed-date'),
+				dueDates: document.querySelectorAll('.borrowing-history-section .due-date'),
+				returnDates: document.querySelectorAll('.borrowing-history-section .returned-date'),
+			},
 		};
 
 		const convertUtcDate = (storedDate) => {
@@ -431,12 +446,26 @@
 			return formattedDate;
 		};
 
+		// Borrowed Books Section
 		domElements.borrowedBooksSection.borrowedDates.forEach((borrowedDate) => {
 			borrowedDate.innerHTML = convertUtcDate(borrowedDate.dataset.utc);
 		});
 
 		domElements.borrowedBooksSection.dueDates.forEach((dueDate) => {
 			dueDate.innerHTML = convertUtcDate(dueDate.dataset.utc);
+		});
+
+		// Borrowing History Section
+		domElements.borrowingHistorySection.borrowedDates.forEach((borrowedDate) => {
+			borrowedDate.innerHTML = convertUtcDate(borrowedDate.dataset.utc);
+		});
+
+		domElements.borrowingHistorySection.dueDates.forEach((dueDate) => {
+			dueDate.innerHTML = convertUtcDate(dueDate.dataset.utc);
+		});
+
+		domElements.borrowingHistorySection.returnDates.forEach((returnDate) => {
+			returnDate.innerHTML = convertUtcDate(returnDate.dataset.utc);
 		});
 	</script>
 
