@@ -1,7 +1,7 @@
 ﻿@model OnlineLibrarySystem_v1.Models.ViewModels.BookListViewModel
 
 @{
-	ViewData["Title"] = "Book Details";
+    ViewData["Title"] = "Book Details";
 }
 
 <div class="container py-4">
@@ -21,24 +21,24 @@
         </div>
 
         <!-- Book Details Column -->
-        <div class="col-md-8">
+        <div class="book-details col-md-8">
             <div class="card shadow-sm">
                 @if (ViewData["Role"] != null && ViewData["Role"].Equals("admin"))
                 {
-				    <div class="card-header">
+                    <div class="card-header">
                         <a
-                            asp-controller="books"
-                            asp-action="delete"
-                            asp-route-id="@Model.Id"
-                            class="btn btn-outline-danger me-md-2 float-end"
+                        asp-controller="books"
+                        asp-action="delete"
+                        asp-route-id="@Model.Id"
+                        class="btn btn-outline-danger me-md-2 float-end"
                         >
                             <i class="bi bi-trash"></i> Delete
                         </a>
                         <a 
-                            asp-controller="books"
-                            asp-action="edit" 
-                            asp-route-id="@Model.Id"
-                            class="btn btn-outline-secondary me-md-2 float-end"
+                        asp-controller="books"
+                        asp-action="edit" 
+                        asp-route-id="@Model.Id"
+                        class="btn btn-outline-secondary me-md-2 float-end"
                         >
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
@@ -64,9 +64,9 @@
                             {
                                 <div class="d-flex align-items-center gap-3">
                                     <form 
-                                        asp-controller="Books"
-                                        asp-action="ReturnBook" 
-                                        asp-route-id="@Model.Id"
+                                    asp-controller="Books"
+                                    asp-action="ReturnBook" 
+                                    asp-route-id="@Model.Id"
                                     >
                                         <button class="btn btn-success" type="submit">
                                             <i class="bi bi-arrow-return-left me-1"></i>Return Book
@@ -74,14 +74,14 @@
                                     </form>
 
                                     <p class="text-muted mb-0">
-                                        Must return on or before <strong>@Model.DueDate?.ToString("MMM dd, yyyy")</strong>
+                                        Must return on or before <strong id="due-date" data-utc="@Model.DueDate?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")"></strong>
                                     </p>
                                 </div>
                             }
                             else
                             {
-							    <form asp-controller="Books" asp-action="Details">
-								    <input asp-for="Id" type="hidden" />
+                                <form asp-controller="Books" asp-action="Details">
+                                    <input asp-for="Id" type="hidden" />
                                     <button class="btn btn-primary me-md-2" type="submit">Borrow Book</button>
                                 </form>
                             }
@@ -92,3 +92,34 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const domElements = {
+            bookDetails: {
+                dueDate: document.querySelector('.book-details #due-date'),
+            },
+        };
+
+        const convertUtcDate = (storedDate) => {
+            const utcDate = new Date(storedDate);
+            const formattedDate = utcDate.toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric'
+            })
+
+            return formattedDate;
+        };
+
+        // Format Due Date (if applicable)
+        if (domElements.bookDetails.dueDate) {
+            domElements.bookDetails.dueDate.innerHTML = convertUtcDate(domElements.bookDetails.dueDate.dataset.utc);
+        }
+    </script>
+}
