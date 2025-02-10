@@ -6,7 +6,7 @@ namespace OnlineLibrarySystem_v1.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The Category Name field is required.")]
+        [Required(ErrorMessage = "Category name is required.")]
         [StringLength(255, ErrorMessage = "The Name field cannot exceed 255 characters.")]
         public string Name { get; set; }
     }

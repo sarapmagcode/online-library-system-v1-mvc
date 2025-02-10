@@ -7,7 +7,7 @@ namespace OnlineLibrarySystem_v1.Models.Entities
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Username is required")]
         [MinLength(4, ErrorMessage = "Username must be at least 4 characters")]
         [RegularExpression(@"^\S*$", ErrorMessage = "Username cannot contain spaces")]
         public string Username { get; set; }
@@ -15,11 +15,11 @@ namespace OnlineLibrarySystem_v1.Models.Entities
         [BindNever]
         public string? PasswordHash { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Role is required")]
         public string Role { get; set; }
 
         [BindNever]

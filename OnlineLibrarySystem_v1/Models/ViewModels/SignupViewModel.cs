@@ -8,12 +8,12 @@ namespace OnlineLibrarySystem_v1.Models.ViewModels
     {
         public User User { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Confirm password is required")]
         [Display(Name = "Confirm Password")]
-        [Required]
         public string ConfirmPassword { get; set; }
     }
 }
