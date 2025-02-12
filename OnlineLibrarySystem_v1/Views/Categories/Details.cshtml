@@ -1,0 +1,45 @@
+﻿@model OnlineLibrarySystem_v1.Models.ViewModels.CategoryDetailsViewModel
+
+<div class="container-fluid">
+	<h3>@Model.Category.Name</h3>
+	<hr />
+
+		@if (Model.Books.Any())
+		{
+			<div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g3">
+				@foreach (var book in Model.Books)
+				{
+					<div class="col">
+						<a
+							asp-controller="books"
+							asp-action="details"
+							asp-route-id="@book.Id"
+							class="card h-100 text-decoration-none text-dark"
+						>
+							<div style="aspect-ratio: 3/4; overflow: hidden;">
+								<img
+									class="card-img-top w-100 h-100 object-fit-cover"
+									src="@book.ImagePath"
+									alt="Book image"
+								>
+							</div>
+
+							<div class="card-body">
+								<h5 class="card-title">@book.Title</h5>
+								<p class="card-text">
+									by <strong>@book.Author</strong><br />
+									@book.TruncatedDescription
+								</p>
+							</div>
+						</a>
+					</div>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="row">
+				<p>There are no books in this category at the moment. Check back soon!</p>
+			</div>
+		}
+</div>

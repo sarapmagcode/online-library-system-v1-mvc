@@ -31,7 +31,11 @@
 		{
 			<tr>
 				<th scope="row">@rowNumber</th>
-				<td>@Html.DisplayFor(modelItem => category.Name)</td>
+				<td>
+					<a asp-controller="categories" asp-action="details" asp-route-id="@category.Id">
+						@Html.DisplayFor(modelItem => category.Name)
+					</a>
+				</td>
 
 				@if(ViewData["Role"] != null && ViewData["Role"].Equals("admin"))
 				{

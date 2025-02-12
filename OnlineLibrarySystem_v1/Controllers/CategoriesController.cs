@@ -64,8 +64,45 @@ namespace OnlineLibrarySystem_v1.Controllers
             return View(model);
         }
 
+        // GET: Categories/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Categories == null)
+            {
+                return NotFound();
+            }
+
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var books = await _context.Books
+                .Where(book => book.CategoryId == category.Id)
+                .Select(book => new BookListViewModel
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    ImagePath = book.ImagePath,
+                    Description = book.Description,
+                    Author = book.Author,
+                    CopiesAvailable = book.CopiesAvailable,
+                    TotalCopies = book.TotalCopies
+                })
+                .ToListAsync();
+
+            var viewModel = new CategoryDetailsViewModel
+            {
+                Category = category,
+                Books = books
+            };
+
+            return View(viewModel);
+        }
+
         // GET: Categories/Edit/5
-        public async Task<IActionResult >Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
