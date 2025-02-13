@@ -24,22 +24,36 @@ namespace OnlineLibrarySystem_v1.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var books = await _context.Books
-                .Include(b => b.Category)
-                .Select(b => new BookListViewModel
+            var query = _context.Books
+                .Include(book => book.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(book =>
+                    book.Title.Contains(search) ||
+                    book.Author.Contains(search) ||
+                    book.Description.Contains(search)
+                );
+            }
+
+            var books = await query
+                .Select(book => new BookListViewModel
                 {
-                    Id = b.Id,
-                    Title = b.Title,
-                    ImagePath = b.ImagePath,
-                    Description = b.Description,
-                    Author = b.Author,
-                    CategoryName = b.Category.Name,
-                    CopiesAvailable = b.CopiesAvailable,
-                    TotalCopies = b.TotalCopies
+                    Id = book.Id,
+                    Title = book.Title,
+                    ImagePath = book.ImagePath,
+                    Description = book.Description,
+                    Author = book.Author,
+                    CategoryName = book.Category.Name,
+                    CopiesAvailable = book.CopiesAvailable,
+                    TotalCopies = book.TotalCopies
                 })
                 .ToListAsync();
+
+            ViewData["search"] = search;
 
             return View(books);
         }

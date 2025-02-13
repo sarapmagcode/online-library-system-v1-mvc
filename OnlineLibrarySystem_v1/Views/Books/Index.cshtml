@@ -16,6 +16,30 @@
 		</div>
 	}
 
+	<!-- Search Book -->
+	<form
+		asp-controller="Books" 
+		asp-action="Index"
+		class="d-flex mb-3" 
+		method="get"
+		role="search"
+	>
+		<input
+			class="form-control me-2"
+			name="search"
+			value="@ViewData["search"]"
+			placeholder="Search for a book..."
+			type="text"
+		/>
+		<button
+			class="btn btn-outline-success d-flex align-items-center justify-content-center gap-2"
+			type="submit"
+		>
+			<i class="bi bi-search"></i>
+			Search
+		</button>
+	</form>
+
 	<!-- List of Books -->
 	<div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3">
 		@foreach (var book in Model)
