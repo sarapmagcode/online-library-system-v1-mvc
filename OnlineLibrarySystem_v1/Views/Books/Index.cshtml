@@ -25,12 +25,18 @@
 		role="search"
 	>
 		<input
+			id="search-input"
 			class="form-control me-2"
 			name="search"
 			value="@ViewData["search"]"
 			placeholder="Search for a book..."
 			type="text"
 		/>
+
+		<button id="clear-search-btn" type="button">
+			<i class="bi bi-x"></i>
+		</button>
+
 		<button
 			class="btn btn-outline-success d-flex align-items-center justify-content-center gap-2"
 			type="submit"
@@ -62,3 +68,29 @@
 		}
 	</div>
 </div>
+
+@section Scripts
+{
+	<script>
+		$(document).ready(function() {
+			function toggleClearSearchBtn() {
+				if ($('#search-input').val().trim() !== '') {
+					$('#clear-search-btn').show();
+				} else {
+					$('#clear-search-btn').hide();
+				}
+			}
+
+			toggleClearSearchBtn();
+
+			$('#search-input').on('input', function() {
+				toggleClearSearchBtn();
+			});
+
+			$('#clear-search-btn').click(function() {
+				$('#search-input').val('');
+				$(this).hide();
+			});
+		});
+	</script>
+}

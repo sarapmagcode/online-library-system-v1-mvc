@@ -20,3 +20,19 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* ================================ Books/Index ================================ */
+#search-input {
+
+}
+
+#clear-search-btn {
+    display: none;
+    background: none;
+    border: none;
+    margin: 0 15px 0 -45px;
+}
+
+#clear-search-btn i {
+    font-size: 20px;
+}
