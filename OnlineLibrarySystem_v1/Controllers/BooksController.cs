@@ -482,7 +482,8 @@ namespace OnlineLibrarySystem_v1.Controllers
                 Directory.CreateDirectory(uploadFolder);
             }
 
-            var uniqueFileName = Guid.NewGuid().ToString() + "_bookImage";
+            var fileExtension = Path.GetExtension(image.FileName).ToLowerInvariant();
+            var uniqueFileName = Guid.NewGuid().ToString() + "_bookImage" + fileExtension;
             var filePath = Path.Combine(uploadFolder, uniqueFileName);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
