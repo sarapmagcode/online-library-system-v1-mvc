@@ -21,9 +21,12 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
+                            <!-- Books -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="books" asp-action="index">Books</a>
                             </li>
+                            
+                            <!-- Categories -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="categories" asp-action="index">Categories</a>
                             </li>
@@ -35,6 +38,17 @@
                         <ul class="navbar-nav">
                             @if (ViewData["Username"] != null)
                             {
+                                <!-- Add Book (admin only) -->
+                                @if (ViewData["Username"] != null && ViewData["Role"].Equals("admin"))
+                                {
+                                    <li class="nav-item mx-2">
+                                        <a class="btn btn-primary" asp-controller="books" asp-action="create">
+                                            <i class="bi bi-plus"></i> Add Book
+                                        </a>
+                                    </li>
+                                }
+
+                                <!-- Account Dropdown -->
                                 <li class="nav-item dropdown">
 								    <button
                                         class="navbar-text btn btn-link dropdown-toggle"

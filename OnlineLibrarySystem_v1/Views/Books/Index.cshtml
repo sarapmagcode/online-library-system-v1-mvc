@@ -5,18 +5,6 @@
 }
 
 <div class="container-fluid">
-
-	<!-- TODO: Move this somewhere -->
-	@if (ViewData["Username"] != null && ViewData["Role"].Equals("admin"))
-	{
-		<!-- Add Book Button (admin only) -->
-		<div class="row my-3 justify-content-end">
-			<a class="btn btn-outline-primary col-12 col-md-4 col-lg-2" asp-controller="books" asp-action="create">
-				<i class="bi bi-plus"></i> Add Book
-			</a>
-		</div>
-	}
-
 	<!-- Search Book -->
 	<form
 		asp-controller="Books" 
