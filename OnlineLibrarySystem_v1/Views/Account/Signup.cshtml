@@ -4,81 +4,85 @@
 	ViewData["Title"] = "Signup";
 }
 
-<h3>Signup</h3>
+<div class="card col-12 col-md-6 col-lg-5 mx-auto py-2">
+	<div class="card-body">
+		<h3 class="card-title">Signup</h3>
 
-<div class="row">
-	<form asp-controller="account" asp-action="signup" class="col-12 col-md-6 col-lg-4">
-		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="row">
+			<form asp-controller="account" asp-action="signup">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-		<!-- Role -->
-		<div class="mb-3">
-			<label asp-for="User.Role" class="form-label"></label>
-			<select asp-for="User.Role" class="form-select">
-				<option value="">Choose a role</option>
-				<option value="user">User</option>
-				<option value="admin">Admin</option>
-			</select>
-			<span asp-validation-for="User.Role" class="text-danger"></span>
+				<!-- Role -->
+				<div class="mb-3">
+					<label asp-for="User.Role" class="form-label"></label>
+					<select asp-for="User.Role" class="form-select" role="button">
+						<option value="">Choose a role</option>
+						<option value="user">User</option>
+						<option value="admin">Admin</option>
+					</select>
+					<span asp-validation-for="User.Role" class="text-danger"></span>
+				</div>
+
+				<!-- Username -->
+				<div class="mb-3">
+					<label asp-for="User.Username" class="form-label"></label>
+					<input 
+						asp-for="User.Username" 
+						class="form-control"
+						type="text" 
+						placeholder="Enter username"
+					/>
+					<span asp-validation-for="User.Username" class="text-danger"></span>
+				</div>
+
+				<!-- Email -->
+				<div class="mb-3">
+					<label asp-for="User.Email" class="form-label"></label>
+					<input
+						asp-for="User.Email"
+						class="form-control"
+						type="email"
+						placeholder="Enter email"
+					/>
+					<span asp-validation-for="User.Email" class="text-danger"></span>
+				</div>
+
+				<!-- Password -->
+				<div class="mb-3">
+					<label asp-for="Password" class="form-label"></label>
+					<input 
+						asp-for="Password"
+						class="form-control" 
+						type="password" 
+						placeholder="Enter password"
+					/>
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</div>
+
+				<!-- Confirm Password -->
+				<div class="mb-3">
+					<label asp-for="ConfirmPassword" class="form-label"></label>
+					<input 
+						asp-for="ConfirmPassword"
+						class="form-control" 
+						type="password" 
+						placeholder="Enter confirm password"
+					/>
+					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+				</div>
+
+				<button class="btn btn-primary" type="submit">Sign up</button>
+
+				<!-- Redirect to Login -->
+				<div class="mt-4">
+					<p class="mb-0">
+						Already have an account?
+						<a asp-controller="account" asp-action="login" class="fw-semibold text-decoration-none">Login here</a>
+					</p>
+				</div>
+			</form>
 		</div>
-
-		<!-- Username -->
-		<div class="mb-3">
-			<label asp-for="User.Username" class="form-label"></label>
-			<input 
-				asp-for="User.Username" 
-				class="form-control"
-				type="text" 
-				placeholder="Enter username"
-			/>
-			<span asp-validation-for="User.Username" class="text-danger"></span>
-		</div>
-
-		<!-- Email -->
-		<div class="mb-3">
-			<label asp-for="User.Email" class="form-label"></label>
-			<input
-				asp-for="User.Email"
-				class="form-control"
-				type="email"
-				placeholder="Enter email"
-			/>
-			<span asp-validation-for="User.Email" class="text-danger"></span>
-		</div>
-
-		<!-- Password -->
-		<div class="mb-3">
-			<label asp-for="Password" class="form-label"></label>
-			<input 
-				asp-for="Password"
-				class="form-control" 
-				type="password" 
-				placeholder="Enter password"
-			/>
-			<span asp-validation-for="Password" class="text-danger"></span>
-		</div>
-
-		<!-- Confirm Password -->
-		<div class="mb-3">
-			<label asp-for="ConfirmPassword" class="form-label"></label>
-			<input 
-				asp-for="ConfirmPassword"
-				class="form-control" 
-				type="password" 
-				placeholder="Enter confirm password"
-			/>
-			<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-		</div>
-
-		<button class="btn btn-primary" type="submit">Sign up</button>
-	
-		<!-- Redirect to Login -->
-		<div class="mt-3">
-			<p class="mb-0">
-				Already have an account?
-				<a asp-controller="account" asp-action="login" class="fw-semibold text-decoration-none">Login here</a>
-			</p>
-		</div>
-	</form>
+	</div>
 </div>
 
 @section Scripts
