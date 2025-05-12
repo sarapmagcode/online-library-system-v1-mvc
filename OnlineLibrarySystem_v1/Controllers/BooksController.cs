@@ -35,8 +35,7 @@ namespace OnlineLibrarySystem_v1.Controllers
                 query = query.Where(book =>
                     book.Title.Contains(search) ||
                     book.Author.Contains(search) ||
-                    book.Description.Contains(search)
-                );
+                    book.Description.Contains(search));
             }
 
             var books = await query
@@ -159,7 +158,7 @@ namespace OnlineLibrarySystem_v1.Controllers
 
             await _context.SaveChangesAsync();
 
-            TempData["SuccesMessage"] = "Book borrowed successfully! Please return it by " + borrowedBook.DueDate.ToString("MMMM dd, yyyy");
+            TempData["SuccessMessage"] = "Book borrowed successfully! Please return it by " + borrowedBook.DueDate.ToString("MMMM dd, yyyy");
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -216,7 +215,9 @@ namespace OnlineLibrarySystem_v1.Controllers
         {
             if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
-                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+                return RedirectToAction(
+                    nameof(AccountController.Login),
+                    nameof(AccountController).Replace("Controller", ""));
             }
 
             var viewModel = new BookViewModel();
@@ -365,7 +366,9 @@ namespace OnlineLibrarySystem_v1.Controllers
         {
             if (ViewData["Role"] == null || !ViewData["Role"].Equals("admin"))
             {
-                return RedirectToAction(nameof(AccountController.Login), nameof(AccountController).Replace("Controller", ""));
+                return RedirectToAction(
+                    nameof(AccountController.Login),
+                    nameof(AccountController).Replace("Controller", ""));
             }
 
             if (id == null || _context.Books == null)
@@ -431,7 +434,8 @@ namespace OnlineLibrarySystem_v1.Controllers
 
         private bool BorrowedBookExists(int bookId)
         {
-            return (_context.BorrowedBooks?.Any(borrowedBook => borrowedBook.BookId == bookId)).GetValueOrDefault();
+            return (_context.BorrowedBooks?
+                .Any(borrowedBook => borrowedBook.BookId == bookId)).GetValueOrDefault();
         }
 
         private async Task RefreshCategoryList(BookViewModel viewModel)
@@ -441,8 +445,7 @@ namespace OnlineLibrarySystem_v1.Controllers
                 categories,
                 "Id",
                 "Name",
-                viewModel.CategoryId
-            );
+                viewModel.CategoryId);
         }
 
         private bool ValidateBookImage(IFormFile? bookImage)
